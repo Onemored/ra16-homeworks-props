@@ -1,8 +1,27 @@
-function formatTitle(title = '') {
+import type { EtsyItem } from '../types';
+
+type ListingProps = {
+  items: EtsyItem[];
+};
+
+type StockBadge = {
+  text: string;
+  className: 'stock-low' | 'stock-medium' | 'stock-high';
+};
+
+type EtsyItemWithImage = EtsyItem & {
+  MainImage: NonNullable<EtsyItem['MainImage']>;
+};
+
+function hasMainImage(item: EtsyItem): item is EtsyItemWithImage {
+  return Boolean(item.MainImage);
+}
+
+function formatTitle(title = ''): string {
   return title.length > 50 ? `${title.slice(0, 50)}…` : title;
 }
 
-function formatPrice(price, currencyCode) {
+function formatPrice(price: string, currencyCode: string): string {
   switch (currencyCode) {
     case 'USD':
       return `$${price}`;
@@ -15,7 +34,7 @@ function formatPrice(price, currencyCode) {
   }
 }
 
-function getStockBadge(quantity) {
+function getStockBadge(quantity: number): StockBadge {
   if (quantity <= 10) {
     return { text: `${quantity} left`, className: 'stock-low' };
   }
@@ -27,8 +46,8 @@ function getStockBadge(quantity) {
   return { text: `${quantity} left`, className: 'stock-high' };
 }
 
-export default function Listing({ items = [] }) {
-  const validItems = items.filter((item) => item.MainImage);
+export default function Listing({ items = [] }: ListingProps) {
+  const validItems = items.filter(hasMainImage);
 
   return (
     <section className="item-list">
@@ -36,19 +55,12 @@ export default function Listing({ items = [] }) {
         const stockBadge = getStockBadge(item.quantity);
 
         return (
-          <article className="product-card" key={item.listing_id}>
-            <a
-              className="product-link"
-              href={item.url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                className="product-image"
-                src={item.MainImage.url_570xN}
-                alt={item.title}
-              />
-            </a>
+          <div className="product-card" key={item.listing_id}>
+            <img
+              className="product-image"
+              src={item.MainImage.url_570xN}
+              alt={item.title}
+            />
             <div className="product-info">
               <h3 className="product-title">{formatTitle(item.title)}</h3>
               <div className="price-container">
@@ -60,7 +72,7 @@ export default function Listing({ items = [] }) {
                 </span>
               </div>
             </div>
-          </article>
+          </div>
         );
       })}
     </section>
