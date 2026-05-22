@@ -1,5 +1,7 @@
 # Список предложений
 
+[![Deploy to GitHub Pages](https://github.com/Onemored/ra16-homeworks-props/actions/workflows/deploy.yml/badge.svg)](https://github.com/Onemored/ra16-homeworks-props/actions/workflows/deploy.yml)
+
 Необходимо вывести список предложений каталога Etsy.com, используя библиотеку React. После загрузки данных и отрисовки список должен выглядеть так:
 ![Список предложений](./assets/preview.png)
 
